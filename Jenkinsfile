@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/ayushiee/nextflix.git'
+                git branch: 'main', url: 'https://github.com/hafiz-syed-burhan/nextflix.git'
             }
         }
 
@@ -36,6 +36,9 @@ pipeline {
     post {
         failure {
             echo '❌ Something went wrong.'
+        }
+        success {
+            echo '✅ Build and run successful!'
         }
     }
 }
