@@ -1,20 +1,22 @@
 pipeline {
     agent any
 
-    environment {
-        NODE_ENV = 'production'
-    }
-
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/ayushiee/nextflix.git', branch: 'main'
+                git 'https://github.com/ayushiee/nextflix.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
                 sh 'yarn install'
+            }
+        }
+
+        stage('Install TypeScript') {
+            steps {
+                sh 'yarn add --dev typescript @types/react'
             }
         }
 
@@ -26,15 +28,12 @@ pipeline {
 
         stage('Run App') {
             steps {
-                echo 'You can run the app manually with: yarn start'
+                sh 'yarn start'
             }
         }
     }
 
     post {
-        success {
-            echo '🎉 Nextflix app built successfully!'
-        }
         failure {
             echo '❌ Something went wrong.'
         }
