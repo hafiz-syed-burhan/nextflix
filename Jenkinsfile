@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        PROJECT_DIR = 'frontend' // or '.' if no subfolder
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -14,31 +10,25 @@ pipeline {
 
         stage('Install Dependencies + TypeScript') {
             steps {
-                dir("${PROJECT_DIR}") {
-                    sh '''
-                        yarn install
-                        yarn add --dev typescript @types/react
-                    '''
-                }
+                sh '''
+                    yarn install
+                    yarn add --dev typescript @types/react
+                '''
             }
         }
 
         stage('Build') {
             steps {
-                dir("${PROJECT_DIR}") {
-                    sh '''
-                        rm -rf .next
-                        yarn build
-                    '''
-                }
+                sh '''
+                    rm -rf .next
+                    yarn build
+                '''
             }
         }
 
         stage('Run App') {
             steps {
-                dir("${PROJECT_DIR}") {
-                    sh 'yarn start &'
-                }
+                sh 'yarn start &'
             }
         }
     }
