@@ -1,38 +1,44 @@
 pipeline {
     agent any
 
+    environment {
+        PROJECT_DIR = 'frontend' // or '.' if no subfolder
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                // Directly check out from 'main' branch
                 git branch: 'main', url: 'https://github.com/hafiz-syed-burhan/nextflix.git'
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Install Dependencies + TypeScript') {
             steps {
-                // Install everything including TS and types
-                sh '''
-                    yarn install
-                    yarn add --dev typescript @types/react
-                '''
+                dir("${PROJECT_DIR}") {
+                    sh '''
+                        yarn install
+                        yarn add --dev typescript @types/react
+                    '''
+                }
             }
         }
 
         stage('Build') {
             steps {
-                // Clean and build
-                sh '''
-                    rm -rf .next
-                    yarn build
-                '''
+                dir("${PROJECT_DIR}") {
+                    sh '''
+                        rm -rf .next
+                        yarn build
+                    '''
+                }
             }
         }
 
         stage('Run App') {
             steps {
-                // Optional: only needed if you want to run the app on Jenkins
-                sh 'yarn start &'
+                dir("${PROJECT_DIR}") {
+                    sh 'yarn start &'
+                }
             }
         }
     }
